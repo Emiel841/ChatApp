@@ -41,7 +41,31 @@ def main(page):
 
 
     def send_msg(msg):
+        msg_list = []
+        iterate = msg.split(" ")
+
+        for word in iterate:
+            found = False
+            for swear_word in banned_words:
+                if swear_word == word:
+                    found = True
+            if found:
+                hashtags = []
+                for i in range(len(word)):
+                    hashtags.append("#")
+                filtered = ''.join(hashtags)
+                msg_list.append(filtered)
+            else:
+                msg_list.append(word)
+
+
+        msg = ' '.join(msg_list)
         client.send((nickname + ": " + msg).encode('ascii'))
+
+    f = open("banned_words.txt", "r")
+    banned_words = []
+    for line in f:
+        banned_words.append(line.strip('\n'))
 
     recive_thread = threading.Thread(target=recive)
     recive_thread.start()
